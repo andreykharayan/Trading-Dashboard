@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.animation-UpDown {
+    animation: UpDown 3s ease-in-out infinite;
+    transition: transform 5s ease;
+}
+
+.animation-UpDown::after {
+    animation: DownUp 5s ease-in-out;
+    transition: transform 5s ease;
+}
+
+@keyframes DownUp {
+    0% {
+        transform: translateY(-100vh);
+        
+    }
+
+    100% {
+        transform: translateY(0);
+        
+        
+    }
+}
+
+@keyframes UpDown {
+    0%, 100% {
+        transform: translateY(0);
+        
+    }
+
+    50% {
+        transform: translateY(-30px);
+        
+        
+    }
+}
+
+.ufoMove:hover{
+    
+    transform: translateY(-100vh);
+    transition: transform 5s ease;
+}
+.inputField {
+    filter: blur(10px);
+}
+.spaceImg {
+    /*filter: blur(100px);*/
+
+}
+
+.arc-top {
+    clip-path: ellipse(50% 100% at 50% 100%);
+
+}
+
+.fieldOfValues {
+    backdrop-filter: blur(10px);
+}
+
+.graphicLine {
+    backdrop-filter: blur(10px);
+}
+
+.titleValue {
+  letter-spacing: 0.2em;
+}
+
+.stars {
+    
+    background-image:
+    
+    radial-gradient(5px 5px at 20% 40%, white 100%, transparent 0),
+    radial-gradient(1.5px 1.5px at 70% 80%, #bbb 100%, transparent 0),
+    radial-gradient(4px 4px at 50% 60%, #888 100%, transparent 0),
+    radial-gradient(3px 3px at 90% 20%, white 100%, transparent 0),
+    radial-gradient(1.5px 1.5px at 30% 70%, #999 100%, transparent 0);
+  background-repeat: repeat;
+  animation: moveStars 100s linear infinite;
+}
+
+.stars-bg {
+  /*background: linear-gradient(to right, #171538, #100D45, #413D80);*/
+  
+ 
+  background-image: linear-gradient(to right, #171538, #100D45, #413D80);
+}
+
+@keyframes moveStars {
+  0% {
+    background-position: 0 0;
+  }
+  
+  100% {
+    background-position: 1000px 1000px;
+  }
+}
+/*
+@keyframes twinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}*/
+
+.falling-star {
+  position: fixed;
+  top: -50px;
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(rgb(255, 255, 255), transparent);
+  animation: fall 4s linear forwards;
+  opacity: 0.8;
+ 
+  pointer-events: none;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+.react-financial-charts-axis line,
+.react-financial-charts-axis path {
+  stroke: #9ca3af;
+}
+
+.react-financial-charts-axis text {
+  fill: #9ca3af;
+  font-size: 11px;
+}
