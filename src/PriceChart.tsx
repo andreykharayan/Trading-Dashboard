@@ -36,7 +36,7 @@ interface LineChartProps {
 }
 
 
-
+//
 export const CandleChart: React.FC<CandleChartProps> = ({data}) => {
     const sorted = [...data].sort((a, b) => +a.date - +b.date);
     const scaleProvider = discontinuousTimeScaleProvider.inputDateAccessor((d: CandleData) => d.date);
@@ -54,6 +54,7 @@ export const CandleChart: React.FC<CandleChartProps> = ({data}) => {
       height ={400}
       width={800}
       ratio={1}
+      
       margin={{left: 50, right: 50, top: 0, bottom: 30}}
       seriesName='Cripto'
       data={chartData}

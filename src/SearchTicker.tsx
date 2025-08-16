@@ -4,7 +4,7 @@ import './index.css';
 import { RegularLine, Candle } from './PriceChart';
 import { CandleData } from './types';
 import Planet from './components/Planet';
-import  FallingStars  from './FallingStars';
+
 import { timeStamp } from 'console';
 
 //компонент для поиска цены по тикету
@@ -47,7 +47,7 @@ export const SearchTicker: React.FC = () => {
 
 
     //функция, которая вызывается при отправке формы (поиске)
-
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -110,8 +110,8 @@ export const SearchTicker: React.FC = () => {
 
     return (
         <div className='stars-bg'>
-        <FallingStars/>
-        <div className=' bg-no-repeat bg-cover bg-center w-screen h-screen'> {/* spaceImg bg-[url(images/space.jpg)] */}
+        
+        <div className=' bg-no-repeat bg-cover bg-center w-screen h-screen'> 
             <div className="stars absolute blur-md bg-black/30 z-0" />
             
             <div className='w-full'>
@@ -140,7 +140,7 @@ export const SearchTicker: React.FC = () => {
             </form>
             </div>
             {/* Показываем индикатор загрузки */}
-            {loading && <p>Загрузка..</p>}
+            {loading && <p>Загрузка..</p>} 
 
             {/* Показываем ошибку, если есть */}
             {error && <p style={{color: 'red'}}>{error}</p>}
@@ -148,14 +148,14 @@ export const SearchTicker: React.FC = () => {
                 {/* Показываем цену, если есть <PriceChart data={historyCandles} />  : ${price}*/}
                 {price !== null && !loading && !error && (
                     <div className='flex justify-center items-center'>
-                    <p className='titleValue pl-10 pr-10 pt-5 pb-5 text-white text-8xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)' }}>{ticker.toUpperCase()}</p>
+                    <p className='titleValue pl-10 pr-10 pt-5 pb-5 text-white text-5xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)' }}>{ticker.toUpperCase()}</p>
                     </div>
                 )}
                 
                 <div className=''>
-                    <button style={{color: 'white'}} className='bg-pink-400' onClick={handleChangeGraphic}>
+                    <button style={{color: 'white'}} className='iconCharts rounded-xl p-2' onClick={handleChangeGraphic}>
                         
-                        {showCandles ? 'Показать линию' : 'Показать свечи'}
+                        {showCandles ? <img className="w-5 h-5" src="icon_lineChart.png" /> : <img className="w-5 h-5" src="icon_candleChart.png" /> }
                         
                     </button>
                     <div className='w-full'>
@@ -166,11 +166,12 @@ export const SearchTicker: React.FC = () => {
                                     handleGetDaysPeriod(7);
                                     }}>7d
                                 </button>
-
-                                <button className='' onClick={() => {
+                                <form onSubmit={handleSubmit}>
+                                <button type="submit" className='' onClick={() => {
                                     handleGetDaysPeriod(14);
                                     }}>14d
                                 </button>
+                                </form>
 
                                 <button className='' onClick={() => {
                                     handleGetDaysPeriod(30);

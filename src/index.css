@@ -46,10 +46,7 @@
 .inputField {
     filter: blur(10px);
 }
-.spaceImg {
-    /*filter: blur(100px);*/
 
-}
 
 .arc-top {
     clip-path: ellipse(50% 100% at 50% 100%);
@@ -65,7 +62,7 @@
 }
 
 .titleValue {
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
 }
 
 .stars {
@@ -134,4 +131,11 @@
 .react-financial-charts-axis text {
   fill: #9ca3af;
   font-size: 11px;
+}
+
+.iconCharts {
+  backdrop-filter: blur(10px);
+  
+  background-color: rgb(67, 113, 167, 0.5) ;
+
 }
