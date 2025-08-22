@@ -2,10 +2,10 @@ import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
 import { RegularLine, Candle } from './PriceChart';
-import { CandleData } from './types';
+//import { CandleData } from './types';
 import Planet from './components/Planet';
 
-import { timeStamp } from 'console';
+
 
 //компонент для поиска цены по тикету
 
