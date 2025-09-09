@@ -2,14 +2,24 @@ import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
 import { RegularLine, Candle } from './PriceChart';
+import ExchangeRate from './components/ExchangeRate';
+import Loading from './components/Loading';
 //import { CandleData } from './types';
 import Planet from './components/Planet';
+import {motion} from "framer-motion";
 
 
 
 //компонент для поиска цены по тикету
 
 export const SearchTicker: React.FC = () => {
+
+    const [CNY, setCNY] = useState<number | null>(null);
+    const [EURO, setEURO] = useState<number | null>(null);
+    const [USD, setUSD] = useState<number | null>(null);
+
+    const [sendData, setSendData] = useState(false);
+
     //состояние для ввода тикера
 
     const [ticker, setTicker] = useState('');
@@ -37,6 +47,10 @@ export const SearchTicker: React.FC = () => {
 
     const [showCandles, setShowCandeles] = useState(false);
 
+    const [moved, setMoved] = useState(false);
+
+    const [dragIndex, setDragIndex] = useState<number | null>(null);
+
     const handleChangeGraphic = () => {
         setShowCandeles(prev => !prev);
     }
@@ -45,6 +59,9 @@ export const SearchTicker: React.FC = () => {
         setDaysPeriod(days);
     }
 
+    const handleDragStart = () => {
+        setDragIndex(111);
+    }
 
     //функция, которая вызывается при отправке формы (поиске)
     
@@ -96,6 +113,9 @@ export const SearchTicker: React.FC = () => {
                 })
             );
             setHistoryCandles(formattedCandles);
+            setMoved(true);
+            setSendData(true);
+
 
             {/*const formattedCandles = ohlcRes.data.map([timestamp, open, high, low, close])
 */}
@@ -111,18 +131,34 @@ export const SearchTicker: React.FC = () => {
     return (
         <div className='stars-bg'>
         
+        <ExchangeRate 
+            setCNY = {setCNY}
+        />
         <div className=' bg-no-repeat bg-cover bg-center w-screen h-screen'> 
             <div className="stars absolute blur-md bg-black/30 z-0" />
             
             <div className='w-full'>
-                <Planet />
+                <div className='grid justify-center items-center'>
+                    <Planet />
+                </div>
             {/*Форма поиска с полем ввода и кнопкой*/}  
             
             <div className='w-full grid justify-center items-center'>
+                <motion.h1 
+                    initial={{x: "-50%", y: "0", left: "0", top: "0"}}
+                    animate={
+                        moved ? {top: "10px", left: "20px", x: 0, y: 0, fontSize: "50px"} : {top: "50%", left: "50%", x: "-50%", y: "-80%", fontSize: "150px"}
+                    }
+                    transition={{duration: 2, ease: "easeOut"}}
+                    className='absolute text-xl'
+                >
+
+                    <div className='text-white font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)'}}>CryptoSearch</div>
+
+                </motion.h1>
                 
-                <div className='text-white text-8xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)'}}>CryptoSearch</div>
-                {/*<div className="w-[300px] h-[150px] bg-black opacity-50 arc-top mx-auto mt-10"></div>*/}
             </div>
+            {/*<div className="w-[300px] h-[150px] bg-black opacity-50 arc-top mx-auto mt-10"></div>*/}
             <div className='flex justify-center items-center w-full h-[200px]'>
                 
             <form onSubmit={handleSubmit} className='w-full flex justify-center items-center h-[100px]'>
@@ -144,6 +180,8 @@ export const SearchTicker: React.FC = () => {
 
             {/* Показываем ошибку, если есть */}
             {error && <p style={{color: 'red'}}>{error}</p>}
+
+            {sendData && (
             <div className='border-4 border-red-500'>
                 {/* Показываем цену, если есть <PriceChart data={historyCandles} />  : ${price}*/}
                 {price !== null && !loading && !error && (
@@ -178,9 +216,25 @@ export const SearchTicker: React.FC = () => {
                                     }}>30d
                                 </button>
                             </div>
-                            <div className='border-4 border-green-500 '>
+                            <div className='flex border-4 border-green-500'>
+                                <div className='dropPositionLeft w-[10%] border-4 border-purple-500 text-white'>
+                                    
+                                    
+                                    left
+                                    <div draggable="true" className='w-full h-[50%] border-4 border-red-500 rounded-full text-white text-2xl font-bold'
+
+                                        onDragStart={handleDragStart}
+                                    
+                                    >
+
+
+                                    </div>
+                                    {CNY}
+
+                                </div>
+                                <div className='w-[80%]'>
                                 {showCandles ? 
-                                    <div className='flex justify-center h-full w-full '>
+                                    <div className='flex justify-center'>
                                         
                                         <Candle data={historyCandles} />
                                         
@@ -191,6 +245,8 @@ export const SearchTicker: React.FC = () => {
                                         
                                     </div>
                                 }
+                                </div>
+                                <div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>right</div>
                             </div>
                         </div>
                 
@@ -198,6 +254,7 @@ export const SearchTicker: React.FC = () => {
                     </div>
                 </div>
             </div>
+            )}
             </div>
         </div>
     </div>

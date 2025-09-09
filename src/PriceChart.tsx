@@ -3,7 +3,7 @@ import React from 'react';
 import {
   LineChart, Line, XAxis as XAxisLine, YAxis as YAxisLine, CartesianGrid, Tooltip, AreaChart, Area, ResponsiveContainer
 } from 'recharts';
-import { useState } from "react";
+import { useMemo } from "react";
 import {
   CandlestickSeries, Chart, ChartCanvas, discontinuousTimeScaleProvider,
   XAxis as XAxisRFC, YAxis as YAxisRFC, OHLCTooltip, MouseCoordinateX, MouseCoordinateY
@@ -50,18 +50,18 @@ export const CandleChart: React.FC<CandleChartProps> = ({data}) => {
     return (
 
       <ChartCanvas
-      useCrossHairStyleCursor={false}
-      height ={400}
-      width={800}
-      ratio={1}
-      
-      margin={{left: 50, right: 50, top: 0, bottom: 30}}
-      seriesName='Cripto'
-      data={chartData}
-      xScale={xScale}
-      xAccessor={xAccessor}
-      displayXAccessor={displayXAccessor}
-      xExtents={xExtents}
+        useCrossHairStyleCursor={false}
+        height ={400}
+        width={800}
+        ratio={1}
+        
+        margin={{left: 50, right: 50, top: 0, bottom: 30}}
+        seriesName='Cripto'
+        data={chartData}
+        xScale={xScale}
+        xAccessor={xAccessor}
+        displayXAccessor={displayXAccessor}
+        xExtents={xExtents}
 
       > 
       <CartesianGrid strokeDasharray="3 3" />
@@ -90,7 +90,7 @@ export const Candle: React.FC<CandleChartProps> = ({data}) => {
 
     return (
         
-        <div className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow">
+        <div className="bg-transparent bg-gradient-to-r from-[#1a61b6]/30 to-[#4371a7]/3 dark:bg-gray-900 rounded-lg p-4 shadow">
 
                 <CandleChart data={data} />
                
@@ -101,33 +101,50 @@ export const Candle: React.FC<CandleChartProps> = ({data}) => {
 };
 
 export const RegularLineChart: React.FC<LineChartProps> = ({data}) => {
-    return (
 
+    const chartData = useMemo(() => {
+    return data.map((p, i) => ({
+      i,                                      // <- index for X (unique per point)
+      price: +p.price,
+      date: typeof p.date === 'number' ? new Date(p.date) : new Date(p.date),
+    }));
+  }, [data]);
+    //<AreaChart data={data} > {/* Сетка графика */} <CartesianGrid strokeDasharray="3 3" /> 
+    // {/* Ось Х даты */} <XAxisLine dataKey="date" domain={["auto", "auto"]} /> 
+    // {/* Ось У - цены, автоматически подстраивается */} 
+    // <YAxisLine domain={["auto", "auto"]} /> {/*Всплывающие подсказки при наведении */} 
+    // <Tooltip /> {/* Линия графика #812AFA*/} 
+    // <Area type="monotone" dataKey="price" name='Цена в $' stroke="#00FFFF" strokeWidth={2}
+    //  dot={{ r: 1, fill: '#10b981' }} activeDot={{r: 6, fill: 'red'}} /> 
+    // <defs> <linearGradient id="colorFill" x1="0" y1="0" x2="0" y2="1"> <stop offset="0" stopColor='#00ffff' stopOpacity={0.4} /> 
+    // <stop offset="100%" stopColor='#001f33' stopOpacity={0.5} /> </linearGradient> </defs> </AreaChart>
+    return (
+            
         /* ResponsiveContainer делает график адаптивным по ширине и высоте */
             <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} >
+            <AreaChart data={chartData} >
             
             {/* Сетка графика */}
             <CartesianGrid strokeDasharray="3 3" />
             {/* Ось Х даты */}
-            <XAxisLine dataKey="date" domain={["auto", "auto"]} />
+            <XAxisLine  
+                dataKey="i"
+                type="number"
+                domain={[0, chartData.length - 1]}
+                allowDuplicatedCategory={true}
+                // pretty ticks (optional): show time or every Nth tick
+                tickFormatter={(i) => data[i]?.date ?? ""}
+                //dataKey="date" domain={["auto", "auto"]}
+            />
             {/* Ось У - цены, автоматически подстраивается */}
             <YAxisLine domain={["auto", "auto"]} />
             {/*Всплывающие подсказки при наведении */}
-            <Tooltip />
-            {/* Линия графика #812AFA*/}
-            <Area 
-            
-                type="monotone"
-                dataKey="price"
-                name='Цена в $'
-                stroke="#00FFFF"
-                strokeWidth={2}
-                dot={{ r: 1, fill: '#10b981' }}
-                activeDot={{r: 6, fill: 'red'}}
-
+            <Tooltip
+                isAnimationActive={true}
+                labelFormatter={(i) => data[+i]?.date?.toLocaleString?.() ?? String(i)}
+                formatter={(v: number) => v.toFixed(2)}
             />
-
+            {/* Линия графика */}
 
             <defs>
 
@@ -140,7 +157,25 @@ export const RegularLineChart: React.FC<LineChartProps> = ({data}) => {
                 </linearGradient>
 
             </defs>
-            </AreaChart></ResponsiveContainer>
+
+            <Area 
+            
+                type="monotone"
+                dataKey="price"
+                name="$"
+                stroke="#00FFFF"
+                strokeWidth={2}
+                fill="url(#colorFill)"
+                dot={{ r: 1, fill: '#10b981' }}
+                activeDot={{r: 6, fill: 'red'}}
+                isAnimationActive={true}
+                
+
+            />
+
+            </AreaChart>
+            
+            </ResponsiveContainer>
 
     );
 }
