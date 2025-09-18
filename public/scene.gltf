@@ -1,0 +1,368 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 8414,
+      "max": [
+        9.880270004272461,
+        9.880260467529297,
+        9.98427963256836
+      ],
+      "min": [
+        -9.880270004272461,
+        -9.880270004272461,
+        -9.98427963256836
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 100968,
+      "componentType": 5126,
+      "count": 8414,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 8414,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 47616,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 201936,
+      "componentType": 5126,
+      "count": 8382,
+      "max": [
+        9.929670333862305,
+        9.929659843444824,
+        10.034210205078125
+      ],
+      "min": [
+        -9.929670333862305,
+        -9.929670333862305,
+        -10.034210205078125
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 302520,
+      "componentType": 5126,
+      "count": 8382,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 67312,
+      "componentType": 5126,
+      "count": 8382,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 190464,
+      "componentType": 5125,
+      "count": 47616,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 403104,
+      "componentType": 5126,
+      "count": 8414,
+      "max": [
+        9.97931957244873,
+        9.979310035705566,
+        10.084380149841309
+      ],
+      "min": [
+        -9.97931957244873,
+        -9.97931957244873,
+        -10.084380149841309
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 504072,
+      "componentType": 5126,
+      "count": 8414,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 134368,
+      "componentType": 5126,
+      "count": 8414,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 380928,
+      "componentType": 5125,
+      "count": 47616,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "generator": "fab-model-conversion",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 571392,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 201680,
+      "byteOffset": 571392,
+      "byteStride": 8,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 605040,
+      "byteOffset": 773072,
+      "byteStride": 12,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1378112,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_unlit"
+  ],
+  "images": [
+    {
+      "uri": "textures/Clouds_baseColor.png"
+    },
+    {
+      "uri": "textures/Earth_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Atmosphere",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.0030331929293374435,
+          0.012566940539201881,
+          0.0660121683342506,
+          0.04
+        ],
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Clouds",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Earth",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Earth_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Clouds_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Atmosphere_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 9,
+            "POSITION": 8,
+            "TEXCOORD_0": 10
+          },
+          "indices": 11,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "name": "Root"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "Earth"
+    },
+    {
+      "mesh": 0,
+      "name": "Earth_0"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        0.31160000000000004,
+        0.6347500000000001,
+        0.70711,
+        0.0,
+        -0.8976700000000002,
+        0.44066000000000005,
+        0.0,
+        0.0,
+        -0.31160000000000004,
+        -0.6347500000000001,
+        0.70711,
+        0.0,
+        -16.43709,
+        -17.524070000000002,
+        22.36779,
+        1.0
+      ],
+      "name": "Sun"
+    },
+    {
+      "name": "Sun"
+    },
+    {
+      "children": [
+        7
+      ],
+      "name": "Clouds"
+    },
+    {
+      "mesh": 1,
+      "name": "Clouds_0"
+    },
+    {
+      "children": [
+        9
+      ],
+      "name": "Atmosphere"
+    },
+    {
+      "mesh": 2,
+      "name": "Atmosphere_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    }
+  ]
+}

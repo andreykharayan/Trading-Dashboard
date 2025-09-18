@@ -5,14 +5,48 @@ import { RegularLine, Candle } from './PriceChart';
 import ExchangeRate from './components/ExchangeRate';
 import Loading from './components/Loading';
 //import { CandleData } from './types';
+
+import Error404 from './components/Error404';
 import Planet from './components/Planet';
+import Earth from './components/Earth';
 import {motion} from "framer-motion";
 
 
 
-//компонент для поиска цены по тикету
+
+type ConfigData = {
+    left: number,
+    right: number
+}
 
 export const SearchTicker: React.FC = () => {
+
+    const [config, setConfig] = useState<ConfigData | null>(null)
+
+    useEffect(() => {
+        const run = async () => {
+            setLoading(true);
+            let randomParameter = Math.random() * 10;
+            try {
+                const responce = await fetch (`system_config.json?randomParameter=${encodeURIComponent(randomParameter)}`);
+                if (!responce.ok) throw new Error('Failed to fetch config');
+                const data: ConfigData = await responce.json()
+                
+                console.log('confJson', data);
+                
+
+                setConfig(data);
+                
+            } catch(err) {
+                console.error(err);
+            }
+        }
+        run();
+    }, []);
+
+
+
+    var arrayPosition: Array<string> = ["left", "right"];
 
     const [CNY, setCNY] = useState<number | null>(null);
     const [EURO, setEURO] = useState<number | null>(null);
@@ -51,17 +85,38 @@ export const SearchTicker: React.FC = () => {
 
     const [dragIndex, setDragIndex] = useState<number | null>(null);
 
+    const [glowDay, setGlowDay] = useState(false);
+
     const handleChangeGraphic = () => {
         setShowCandeles(prev => !prev);
+        console.log(config);
     }
 
     const handleGetDaysPeriod = (days :number) => {
         setDaysPeriod(days);
     }
 
-    const handleDragStart = () => {
-        setDragIndex(111);
+    const handleDragStart = (index: number) => {
+        setDragIndex(index);
+        
     }
+
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+    }
+
+    const handleDrop = (dropIndex: number) => {
+        // Если ничего не перетаскивали или бросили на то же место — ничего не делаем
+        if (dragIndex == null || dragIndex === dropIndex ) return;
+        
+
+        
+        //console.log(result);
+
+        setDragIndex(null);
+        
+    }
+
 
     //функция, которая вызывается при отправке формы (поиске)
     
@@ -86,6 +141,7 @@ export const SearchTicker: React.FC = () => {
             const data = response.data;
             if (data && data[ticker.toLowerCase()] && data[ticker.toLowerCase()].usd) {
                 setPrice(data[ticker.toLowerCase()].usd); // сохраняем цену
+                console.log('price', data[ticker.toLowerCase()].usd);
             } else {
                 setError('Тикер не найден');//выводим ошибку
             }
@@ -128,9 +184,38 @@ export const SearchTicker: React.FC = () => {
         
     };
 
+    const [movePlanet, setMovePlanet] = useState(false);
+
+    const handleMovePlanet = () => {
+
+    setMovePlanet(prev => !prev);
+
+}
+
     return (
         <div className='stars-bg'>
+
+        {/*<div className='error404class absolute top-1/2  border-4 border-yellow-500'>
+            <Error404 />
+    </div>*/}
         
+        <div className='relative w-sreen h-sreen '>
+
+
+        <div className='absolute w-[40%] overflow-hidden right-0 border-green-500 text-white'>
+
+            <div className='relative h-screen'>
+                
+                    <Planet />
+                
+                
+            </div>
+
+        </div>
+
+
+        </div>
+
         <ExchangeRate 
             setCNY = {setCNY}
         />
@@ -139,10 +224,10 @@ export const SearchTicker: React.FC = () => {
             
             <div className='w-full'>
                 <div className='grid justify-center items-center'>
-                    <Planet />
+                    
                 </div>
             {/*Форма поиска с полем ввода и кнопкой*/}  
-            
+            {/*
             <div className='w-full grid justify-center items-center'>
                 <motion.h1 
                     initial={{x: "-50%", y: "0", left: "0", top: "0"}}
@@ -153,13 +238,14 @@ export const SearchTicker: React.FC = () => {
                     className='absolute text-xl'
                 >
 
-                    <div className='text-white font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)'}}>CryptoSearch</div>
+                    <div className='text-white font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)'}}>CryptoSearch{config?.left}{config?.right}</div>
 
                 </motion.h1>
                 
             </div>
+            */}
             {/*<div className="w-[300px] h-[150px] bg-black opacity-50 arc-top mx-auto mt-10"></div>*/}
-            <div className='flex justify-center items-center w-full h-[200px]'>
+            <div className='flex justify-start items-center w-[75%] h-[200px]'>
                 
             <form onSubmit={handleSubmit} className='w-full flex justify-center items-center h-[100px]'>
 
@@ -181,49 +267,77 @@ export const SearchTicker: React.FC = () => {
             {/* Показываем ошибку, если есть */}
             {error && <p style={{color: 'red'}}>{error}</p>}
 
-            {sendData && (
-            <div className='border-4 border-red-500'>
+            {sendData && config && (
+            <div className='flex justify-end border-4 border-red-500'>
+                <div className='w-[70%]'>
                 {/* Показываем цену, если есть <PriceChart data={historyCandles} />  : ${price}*/}
                 {price !== null && !loading && !error && (
-                    <div className='flex justify-center items-center'>
-                    <p className='titleValue pl-10 pr-10 pt-5 pb-5 text-white text-5xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)' }}>{ticker.toUpperCase()}</p>
+                    <div className='grid gap-4'>
+                        <div className='flex justify-center'>
+                            <p className='titleValue pl-10 pr-10 pt-2 pb-2 text-white text-5xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)' }}>{ticker.toUpperCase()}</p>
+                        </div>
+                        <div className='flex justify-center'>
+                            <p className='titlePrice text-white font-bold text-2xl' style={{ boxShadow: `0 0 10px cyan`}}>$ {price}</p>
+                        </div>
+                    
                     </div>
                 )}
                 
-                <div className=''>
-                    <button style={{color: 'white'}} className='iconCharts rounded-xl p-2' onClick={handleChangeGraphic}>
+                <div className='border-4 border-cyan-500 rounded-3xl' style={{ boxShadow: `inset 0 0 0 -5px blue` }}>
+                    <button style={{color: 'white'}} className='iconCharts rounded-xl ml-2 mt-2 p-2' onClick={handleChangeGraphic}>
                         
                         {showCandles ? <img className="w-5 h-5" src="icon_lineChart.png" /> : <img className="w-5 h-5" src="icon_candleChart.png" /> }
                         
                     </button>
                     <div className='w-full'>
                     {/*<h2 className='text-lg font-semibold mb-2 text-center text-white'>График за 7 дней</h2>*/}
-                        <div className='grid'>
-                            <div className='flex justify-end border-4 border-white bg-blue-500 text-white'>
-                                <button className='' onClick={() => {
+                        <div className='yourChart grid gap-10'>
+                            <div className='selectDays flex justify-center gap-4 text-xl text-white'>
+                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
                                     handleGetDaysPeriod(7);
-                                    }}>7d
+                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                        
+                                        
+                                            7D
+                                    
+                                    </div>
                                 </button>
                                 <form onSubmit={handleSubmit}>
-                                <button type="submit" className='' onClick={() => {
+                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
                                     handleGetDaysPeriod(14);
-                                    }}>14d
+                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                        
+                                        
+                                            14D
+                                    
+                                    </div>
                                 </button>
                                 </form>
 
-                                <button className='' onClick={() => {
+                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
                                     handleGetDaysPeriod(30);
-                                    }}>30d
+                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                        
+                                        
+                                            30D
+                                    
+                                    </div>
                                 </button>
                             </div>
-                            <div className='flex border-4 border-green-500'>
-                                <div className='dropPositionLeft w-[10%] border-4 border-purple-500 text-white'>
+                            <div className='flex'>
+                                <div className='dropPositionLeft w-[10%]  text-white'>
                                     
                                     
-                                    left
+                                    left 
                                     <div draggable="true" className='w-full h-[50%] border-4 border-red-500 rounded-full text-white text-2xl font-bold'
 
-                                        onDragStart={handleDragStart}
+                                        onDragStart={() => {
+                                            handleDragStart(config.left);
+                                            
+                                        }}
+
+                                        onDragOver={handleDragOver} 
+                                        onDrop={() => handleDrop(config.left)}
                                     
                                     >
 
@@ -246,12 +360,30 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                 }
                                 </div>
-                                <div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>right</div>
+                                <div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>
+                                    
+                                    right
+                                
+                                    <div draggable="true" className='w-full h-[50%] border-4 border-red-500 rounded-full text-white text-2xl font-bold'
+
+                                        onDragStart={() => {
+                                            handleDragStart(config.right);
+                                        }}
+                                        
+                                        onDragOver={handleDragOver} 
+                                        onDrop={() => handleDrop(config.right)}
+                                    
+                                    >
+
+                                    </div>
+                                
+                                </div>
                             </div>
                         </div>
                 
                     
                     </div>
+                </div>
                 </div>
             </div>
             )}

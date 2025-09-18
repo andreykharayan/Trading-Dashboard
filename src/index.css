@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@font-face {
+  font-family: 'orbitronBlack'; /* Название шрифта */
+  src: url('/fonts/orbitron-black.otf') format('otf'); /* Путь к файлу */
+       
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'orbitronBold'; /* Название шрифта */
+  src: url('/fonts/orbitron-bold.otf') format('otf'); /* Путь к файлу */
+       
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'orbitronLight'; /* Название шрифта */
+  src: url('/fonts/orbitron-light.otf') format('otf'); /* Путь к файлу */
+       
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'orbitronMedium'; /* Название шрифта */
+  src: url('/fonts/orbitron-medium.otf') format('otf'); /* Путь к файлу */
+       
+  font-weight: normal;
+  font-style: normal;
+}
+
 .animation-UpDown {
     animation: UpDown 3s ease-in-out infinite;
     transition: transform 5s ease;
@@ -64,6 +97,9 @@
 .titleValue {
   letter-spacing: 0.1em;
 }
+.titlePrice {
+  color: #57caf8;
+}
 
 .stars {
     
@@ -82,7 +118,7 @@
   /*background: linear-gradient(to right, #171538, #100D45, #413D80);*/
   
  
-  background-image: linear-gradient(to right, #171538, #100D45, #413D80);
+  background-image: linear-gradient(to right, #020207, #000000, #171274);
 }
 
 @keyframes moveStars {
@@ -139,3 +175,59 @@
   background-color: rgb(67, 113, 167, 0.5) ;
 
 }
+
+.yourChart {
+  
+}
+
+.selectDays {
+  font-family: 'orbitronBold';
+  backdrop-filter: blur(10px);
+}
+
+/* Error404.tsx */
+
+
+.spaceDudeImg {
+  transition: transform 1s ease;
+  transform: scale(1.5);
+  filter: sepia(70%)  hue-rotate(10deg) saturate(150%) brightness(100%);
+}
+
+.error404-box {
+  transform: rotateY(35deg) rotateX(40deg);
+  transform-style: preserve-3d;
+}
+
+.error404text {
+
+  font-size: 100px;
+  font-family: 'orbitronBold';
+  line-height: 0.5;
+  
+}
+
+.numbers {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 0.2;
+}
+
+.four {
+  transform: rotateY(35deg) rotateX(40deg);
+  transform-style: preserve-3d;
+}
+
+
+
+.zero {
+  transform: rotateY(35deg) rotateX(40deg);
+  transform-style: preserve-3d;
+}
+
+
+
+
+/* Error404.tsx */
