@@ -66,3 +66,5 @@ export default function PlanetBG({ phase = "idle" as Phase }) {
     </Canvas>
   );
 }
+
+

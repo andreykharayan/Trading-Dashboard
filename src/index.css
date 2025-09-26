@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 
+html, body, #root { height: 100%; }
+body { 
+  background-image: linear-gradient(to right, #020207, #000000, #171274);
+}  
+
 @font-face {
   font-family: 'orbitronBlack'; /* Название шрифта */
   src: url('/fonts/orbitron-black.otf') format('otf'); /* Путь к файлу */
@@ -28,12 +33,21 @@
 }
 
 @font-face {
-  font-family: 'orbitronMedium'; /* Название шрифта */
-  src: url('/fonts/orbitron-medium.otf') format('otf'); /* Путь к файлу */
-       
-  font-weight: normal;
+  font-family: 'Vorcas';
+  src: url('/fonts/vorcas.otf') format('opentype'); 
+  font-weight: 400;         
   font-style: normal;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: 'Audiowide';
+  src: url('/fonts/audiowide.ttf') format('truetype'); 
+  font-weight: 400;         
+  font-style: normal;
+  font-display: swap;
+}
+
 
 .animation-UpDown {
     animation: UpDown 3s ease-in-out infinite;
@@ -95,11 +109,99 @@
 }
 
 .titleValue {
+  font-family: 'Audiowide', ui-sans-serif, system-ui, sans-serif;
+  font-size: 80px;
   letter-spacing: 0.1em;
+  position: relative;
+  color: #11d9f8;
+  text-shadow:
+    0 0 2px  #22d3ee,
+    0 0 8px  #22d3ee,
+    0 0 22px #22d3ee,
+    0 0 44px #22d3ee;
+}
+
+
+.titleValue::before {
+  content: "";
+  position: absolute;
+  inset: -0.6em -0.8em;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 50%,
+              rgba(34,211,238,.28) 0%,
+              rgba(34,211,238,0) 70%);
+  filter: blur(10px);
 }
 .titlePrice {
   color: #57caf8;
+  
 }
+
+.searchButton {
+  backdrop-filter: blur(5px);
+  
+}
+
+/* Бегущий огонёк по рамке */
+.glow-ring::before {
+  content: "";
+  position: absolute;
+  inset: -2px;              /* толщина рамки */
+  border-radius: inherit;
+  padding: 2px;
+
+  /* вращающийся конусный градиент — «огонёк» */
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(0,0,0,0) 0deg,
+      rgba(56,189,248,0.0) 10deg,
+      rgba(56,189,248,0.8) 60deg, /* самый яркий сектор */
+      rgba(56,189,248,0.0) 110deg,
+      rgba(0,0,0,0) 360deg
+    );
+
+  /* показываем только 2px-рамку, центр вырезаем маской */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+
+  animation: glow-spin 2.6s linear infinite;
+  filter: blur(.2px); /* сглаживание */
+}
+
+/* Мягкий внешний ореол */
+.glow-outer {
+  box-shadow: 0 0 22px 6px rgba(56,189,248,0.35),
+              0 0 60px 16px rgba(56,189,248,0.18);
+  opacity: .85;
+  transition: opacity .25s ease;
+}
+button.group:hover .glow-outer { opacity: 1; }
+
+/* Пульсация внутреннего свечения кнопки */
+button.group {
+  /* дополнительное внутреннее свечение при ховере */
+  box-shadow:
+    inset 0 0 18px rgba(56,189,248,.18),
+    0 0 16px rgba(56,189,248,.22);
+}
+
+/* анимации */
+@keyframes glow-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* уважение к предпочитаемому снижению анимаций */
+@media (prefers-reduced-motion: reduce) {
+  .glow-ring::before { animation: none; }
+}
+
+
+
 
 .stars {
     
@@ -169,15 +271,18 @@
   font-size: 11px;
 }
 
+.boxWithPrice {
+  filter: drop-shadow(0 0 15px rgba(30, 183, 243, 0.8));
+}
+
+.boxWithChart {
+  filter: drop-shadow(0 0 5px rgba(38, 16, 66, 0.8));
+}
 .iconCharts {
   backdrop-filter: blur(10px);
   
   background-color: rgb(67, 113, 167, 0.5) ;
 
-}
-
-.yourChart {
-  
 }
 
 .selectDays {

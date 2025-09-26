@@ -10,7 +10,7 @@ import Error404 from './components/Error404';
 import Planet from './components/Planet';
 import Earth from './components/Earth';
 import {motion} from "framer-motion";
-
+import SearchTV from './components/SearchTV';
 
 
 
@@ -85,7 +85,9 @@ export const SearchTicker: React.FC = () => {
 
     const [dragIndex, setDragIndex] = useState<number | null>(null);
 
-    const [glowDay, setGlowDay] = useState(false);
+    const [glowDay, setGlowDay] = useState<number | 7>(7);
+
+    const [planetGo, setPlanetGo] = useState(false);
 
     const handleChangeGraphic = () => {
         setShowCandeles(prev => !prev);
@@ -173,24 +175,97 @@ export const SearchTicker: React.FC = () => {
             setSendData(true);
 
 
-            {/*const formattedCandles = ohlcRes.data.map([timestamp, open, high, low, close])
-*/}
+            
         } catch {
             setError('Ошибка при загрузке данных'); //ошибка запроса
         } finally {
             setLoading(false); //скрываем индикатор загрузки
         }
 
+        setPlanetGo(true);
+    };
+
+
+    const handleSetGlowDay = (day: number) => {
+
+        if (day === 7 || day === 14 || day === 30) {
+            setGlowDay(day);
+        } else {
+            setGlowDay(7);
+        }
         
     };
 
-    const [movePlanet, setMovePlanet] = useState(false);
 
-    const handleMovePlanet = () => {
+    
+    // единый обработчик по строке тикера
+    const fetchByTicker = async (q: string) => {
+        if (!q.trim()) return;
+        const id = q.toLowerCase();
+    
+        try {
+        setPlanetGo(true);                 // запускаем полёт/камеру
+        setLoading(true);
+        setError('');
+        setPrice(null);
+        setHistory([]);
+        setHistoryCandles([]);
+        setSendData(false);
+    
+        // 1) Цена
+        const priceRes = await axios.get(
+            `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd`
+        );
+        const p = priceRes.data?.[id]?.usd;
+        if (typeof p !== 'number') {
+            setError('Тикер не найден');
+            return;
+        }
+        setPrice(p);
+    
+        // 2) История (линейный график)
+        const histRes = await axios.get(
+            `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${daysPeriod ?? 7}`
+        );
+        const formatted = histRes.data.prices.map(
+            ([timestamp, price]: [number, number]) => ({
+            date: new Date(timestamp).toLocaleDateString(),
+            price,
+            })
+        );
+        setHistory(formatted);
+    
+        // 3) Свечи (OHLC)
+        const ohlcRes = await axios.get(
+            `https://api.coingecko.com/api/v3/coins/${id}/ohlc?vs_currency=usd&days=${daysPeriod ?? 7}`
+        );
+        const formattedCandles = ohlcRes.data.map(
+            ([timestamp, open, high, low, close]: [number, number, number, number, number]) => ({
+            date: new Date(timestamp),
+            open, high, low, close,
+            })
+        );
+        setHistoryCandles(formattedCandles);
+    
+        setMoved(true);
+        setSendData(true);
+        } catch (e) {
+        console.error(e);
+        setError('Ошибка при загрузке данных');
+        } finally {
+        setLoading(false);
+        }
+    };
+  
+  
 
-    setMovePlanet(prev => !prev);
 
-}
+    const handleSearchFromTV = async (q: string) => {
+        if (!q.trim()) return;
+        setTicker(q);          // синхронизация заголовка/ценника
+        setPlanetGo(true);     // полет планеты/камера
+        await fetchByTicker(q) // твой общий загрузчик (axios + setState)
+      };
 
     return (
         <div className='stars-bg'>
@@ -199,22 +274,29 @@ export const SearchTicker: React.FC = () => {
             <Error404 />
     </div>*/}
         
-        <div className='relative w-sreen h-sreen '>
+        <div className='relative w-screen h-sreen '>
 
 
-        <div className='absolute w-[40%] overflow-hidden right-0 border-green-500 text-white'>
+        <div className='absolute w-full overflow-hidden right-0 border-green-500 text-white'>
 
-            <div className='relative h-screen'>
+            <div className='relative h-screen w-full'>
                 
-                    <Planet />
-                
-                
+                    <Planet go={planetGo} />
+                    
+                        <SearchTV onSubmit={(ticker) => {
+                            // твой submit: запросы, запуск анимаций планеты и т.д.
+                            handleSearchFromTV(ticker);
+                        }} />
+                    
+                    
             </div>
 
         </div>
 
 
         </div>
+
+        
 
         <ExchangeRate 
             setCNY = {setCNY}
@@ -245,9 +327,9 @@ export const SearchTicker: React.FC = () => {
             </div>
             */}
             {/*<div className="w-[300px] h-[150px] bg-black opacity-50 arc-top mx-auto mt-10"></div>*/}
-            <div className='flex justify-start items-center w-[75%] h-[200px]'>
+            <div className='flex justify-start items-center w-full h-[200px]'>
                 
-            <form onSubmit={handleSubmit} className='w-full flex justify-center items-center h-[100px]'>
+            {/*<form onSubmit={handleSubmit} className='w-full flex justify-center items-center h-[100px]'>
 
                 <input 
                 
@@ -255,11 +337,21 @@ export const SearchTicker: React.FC = () => {
                     border-blue-500 bg-transparent bg-gradient-to-r from-[#1a61b6]/30 to-[#4371a7]/30 text-white text-3xl font-bold" type="text" value={ticker} onChange={(e) => setTicker(e.target.value)} 
                     placeholder='Input a ticker (e. bitcoin)'
                 />
-                <button type="submit" className='h-[60px] w-[100px] border-2 border-blue-500 border-opacity-70 
-                bg-gradient-to-r from-[#4371a7] via-[#1a61b6] to-[#4371a7] hover:bg-700 text-white 
-                text-xl font-bold py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300'>Search</button>
+                <button
+                    type="submit"
+                    className="relative group inline-flex items-center justify-center px-5 h-12 rounded-xl
+                                font-semibold text-white bg-[#1a3a6a] hover:bg-[#20467f] transition-colors
+                                shadow-[0_0_20px_rgba(50,140,255,.25)]"
+                    >
+                    <span className="relative z-10">Search</span>
+
+                    
+                    <span className="glow-ring pointer-events-none absolute inset-0 rounded-xl"></span>
+                    
+                    <span className="glow-outer pointer-events-none absolute -inset-1 rounded-[1.25rem]"></span>
+                </button>
             
-            </form>
+            </form>*/}
             </div>
             {/* Показываем индикатор загрузки */}
             {loading && <p>Загрузка..</p>} 
@@ -268,34 +360,34 @@ export const SearchTicker: React.FC = () => {
             {error && <p style={{color: 'red'}}>{error}</p>}
 
             {sendData && config && (
-            <div className='flex justify-end border-4 border-red-500'>
-                <div className='w-[70%]'>
+            <div className=' flex justify-end'>
+                <div className='w-[80%]'>
                 {/* Показываем цену, если есть <PriceChart data={historyCandles} />  : ${price}*/}
                 {price !== null && !loading && !error && (
-                    <div className='grid gap-4'>
+                    <div className='boxWithPrice grid gap-4'>
                         <div className='flex justify-center'>
                             <p className='titleValue pl-10 pr-10 pt-2 pb-2 text-white text-5xl font-bold' style={{textShadow: '2px 2px 6px rgba(0, 0, 0, 0.7)' }}>{ticker.toUpperCase()}</p>
                         </div>
                         <div className='flex justify-center'>
-                            <p className='titlePrice text-white font-bold text-2xl' style={{ boxShadow: `0 0 10px cyan`}}>$ {price}</p>
+                            <p className='titlePrice m-5 text-white font-bold text-2xl' style={{ boxShadow: `0 0 10px cyan`}}>$ {price}</p>
                         </div>
                     
                     </div>
                 )}
                 
-                <div className='border-4 border-cyan-500 rounded-3xl' style={{ boxShadow: `inset 0 0 0 -5px blue` }}>
+                <div className='boxWithChart border-4 border-cyan-500 rounded-3xl'>
                     <button style={{color: 'white'}} className='iconCharts rounded-xl ml-2 mt-2 p-2' onClick={handleChangeGraphic}>
                         
                         {showCandles ? <img className="w-5 h-5" src="icon_lineChart.png" /> : <img className="w-5 h-5" src="icon_candleChart.png" /> }
                         
                     </button>
                     <div className='w-full'>
-                    {/*<h2 className='text-lg font-semibold mb-2 text-center text-white'>График за 7 дней</h2>*/}
+                    {/*<h2 className='text-lg font-semibold mb-2 text-center text-white'>График за 7 дней</h2>   rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50*/}
                         <div className='yourChart grid gap-10'>
                             <div className='selectDays flex justify-center gap-4 text-xl text-white'>
-                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
-                                    handleGetDaysPeriod(7);
-                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                <button className='' onClick={() => {
+                                    handleGetDaysPeriod(7); handleSetGlowDay(7);
+                                    }} style={glowDay === 7 ? {boxShadow: `0 0 5px cyan`} : {} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
                                         
                                         
                                             7D
@@ -303,9 +395,9 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                 </button>
                                 <form onSubmit={handleSubmit}>
-                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
-                                    handleGetDaysPeriod(14);
-                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                <button className='' onClick={() => {
+                                    handleGetDaysPeriod(14); handleSetGlowDay(14);
+                                    }} style={glowDay === 14 ? {boxShadow: `0 0 5px cyan`} : {} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
                                         
                                         
                                             14D
@@ -314,9 +406,9 @@ export const SearchTicker: React.FC = () => {
                                 </button>
                                 </form>
 
-                                <button className='rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50' onClick={() => {
-                                    handleGetDaysPeriod(30);
-                                    }} style={{boxShadow: `0 0 5px cyan`} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
+                                <button className='' onClick={() => {
+                                    handleGetDaysPeriod(30); handleSetGlowDay(30);
+                                    }} style={glowDay === 30 ? {boxShadow: `0 0 5px cyan`} : {} }><div className='flex justify-center items-center pt-1 pb-1 pl-3 pr-3'>
                                         
                                         
                                             30D
@@ -324,8 +416,8 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                 </button>
                             </div>
-                            <div className='flex'>
-                                <div className='dropPositionLeft w-[10%]  text-white'>
+                            <div className='flex justify-center'>
+                                {/*<div className='dropPositionLeft w-[10%]  text-white'>
                                     
                                     
                                     left 
@@ -345,8 +437,8 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                     {CNY}
 
-                                </div>
-                                <div className='w-[80%]'>
+                                </div>*/}
+                                <div className='w-full'>
                                 {showCandles ? 
                                     <div className='flex justify-center'>
                                         
@@ -360,7 +452,7 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                 }
                                 </div>
-                                <div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>
+                                {/*<div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>
                                     
                                     right
                                 
@@ -377,7 +469,7 @@ export const SearchTicker: React.FC = () => {
 
                                     </div>
                                 
-                                </div>
+                                </div>*/}
                             </div>
                         </div>
                 
