@@ -50,10 +50,10 @@ export default function SearchTV({ onSubmit }: Props) {
             animate={centerCtrl}
             exit={{ opacity: 0 }}
             style={{ originX: 0.5, originY: 0.5 }}
-            className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none"
+            className="w-full fixed inset-0 z-30 flex items-center justify-center pointer-events-none"
           >
             <motion.div
-              className="pointer-events-auto flex items-center gap-3 rounded-xl
+              className="w-[70%] pointer-events-auto flex items-center gap-3 rounded-xl
                          border border-cyan-400/40 bg-white/5 backdrop-blur
                          shadow-[0_0_24px_rgba(34,211,238,.25)]
                          px-4 h-14 w-[min(90vw,900px)]"
@@ -66,7 +66,7 @@ export default function SearchTV({ onSubmit }: Props) {
               />
               <button
                 type="submit"
-                className="px-4 h-10 rounded-lg bg-cyan-500/20 border border-cyan-400/50 text-cyan-100
+                className=" px-4 h-10 rounded-lg bg-cyan-500/20 border border-cyan-400/50 text-cyan-100
                            hover:bg-cyan-500/30 transition-colors"
               >
                 Search

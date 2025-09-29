@@ -304,7 +304,7 @@ export const SearchTicker: React.FC = () => {
         <div className=' bg-no-repeat bg-cover bg-center w-screen h-screen'> 
             <div className="stars absolute blur-md bg-black/30 z-0" />
             
-            <div className='w-full'>
+            <div className='w-screen h-screen'>
                 <div className='grid justify-center items-center'>
                     
                 </div>
@@ -354,7 +354,16 @@ export const SearchTicker: React.FC = () => {
             </form>*/}
             </div>
             {/* Показываем индикатор загрузки */}
-            {loading && <p>Загрузка..</p>} 
+            {loading && (
+                <>
+                    <p className='status-loading w-screen h-screen'>Вселенная загружает данные
+
+                        <div className='loader'></div>
+
+                    </p>
+                    
+                </>
+            )} 
 
             {/* Показываем ошибку, если есть */}
             {error && <p style={{color: 'red'}}>{error}</p>}
@@ -362,7 +371,7 @@ export const SearchTicker: React.FC = () => {
             {sendData && config && (
             <div className=' flex justify-end'>
                 <div className='w-[80%]'>
-                {/* Показываем цену, если есть <PriceChart data={historyCandles} />  : ${price}*/}
+                
                 {price !== null && !loading && !error && (
                     <div className='boxWithPrice grid gap-4'>
                         <div className='flex justify-center'>
@@ -382,7 +391,7 @@ export const SearchTicker: React.FC = () => {
                         
                     </button>
                     <div className='w-full'>
-                    {/*<h2 className='text-lg font-semibold mb-2 text-center text-white'>График за 7 дней</h2>   rounded-lg border-2 border-cyan-500 shadow-lg shadow-cyan-500/50*/}
+                    
                         <div className='yourChart grid gap-10'>
                             <div className='selectDays flex justify-center gap-4 text-xl text-white'>
                                 <button className='' onClick={() => {
@@ -417,27 +426,7 @@ export const SearchTicker: React.FC = () => {
                                 </button>
                             </div>
                             <div className='flex justify-center'>
-                                {/*<div className='dropPositionLeft w-[10%]  text-white'>
-                                    
-                                    
-                                    left 
-                                    <div draggable="true" className='w-full h-[50%] border-4 border-red-500 rounded-full text-white text-2xl font-bold'
-
-                                        onDragStart={() => {
-                                            handleDragStart(config.left);
-                                            
-                                        }}
-
-                                        onDragOver={handleDragOver} 
-                                        onDrop={() => handleDrop(config.left)}
-                                    
-                                    >
-
-
-                                    </div>
-                                    {CNY}
-
-                                </div>*/}
+                                
                                 <div className='w-full'>
                                 {showCandles ? 
                                     <div className='flex justify-center'>
@@ -452,24 +441,7 @@ export const SearchTicker: React.FC = () => {
                                     </div>
                                 }
                                 </div>
-                                {/*<div className='dropPositionRight w-[10%] border-4 border-purple-500 text-white'>
-                                    
-                                    right
                                 
-                                    <div draggable="true" className='w-full h-[50%] border-4 border-red-500 rounded-full text-white text-2xl font-bold'
-
-                                        onDragStart={() => {
-                                            handleDragStart(config.right);
-                                        }}
-                                        
-                                        onDragOver={handleDragOver} 
-                                        onDrop={() => handleDrop(config.right)}
-                                    
-                                    >
-
-                                    </div>
-                                
-                                </div>*/}
                             </div>
                         </div>
                 
